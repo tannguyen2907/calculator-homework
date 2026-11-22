@@ -26,7 +26,7 @@ submitBtn.addEventListener('click', () => {
 
 buttonGroup.addEventListener('click', (event) => {
   if (event.target === buttonGroup) {
-    alert('Nguyen Van Dang');
+    alert('Please click Reset or Submit.');
   }
 });
 
