@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calculator</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+
+  <div class="page">
+
+    <div class="calculator" style="width: 400px; padding: 24px; border-radius: 16px;">
+      <h1>Calculator</h1>
+      <div class="input">
+        <input type="text" class="numberOne" placeholder="Number 1">
+        <input type="text" class="numberTwo" placeholder="Number 2">
+      </div>
+      <div class="operation">
+        <button class="add">+
+        </button>
+        <button class="subtract">-
+        </button>
+        <button class="multiply">*
+        </button>
+        <button class="divide">/
+        </button>
+      </div>
+      <div class="buttonGroup" style="display: flex; justify-content: center; gap: 16px; margin-top: 16px;">
+        <button type="button" class="reset">Reset</button>
+        <button type="button" class="submit">Submit</button>
+      </div>
+      <div class="result">
+        <p>Result: <span id="result">0</span></p>
+      </div>
+      <div class="history">
+        <h2>History</h2>
+        <ul id="historyList"></ul>
+      </div>
+    </div>
+  </div>
+  <script>
+
+  </script>
+
+</body>
+</html>
