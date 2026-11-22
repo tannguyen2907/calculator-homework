@@ -7,6 +7,29 @@
   <link rel="stylesheet" href="style.css">
   <script src="app.js" defer></script>
 </head>
+  <script>
+  function resetCalculator() {
+    const numberOne = document.querySelector('.numberOne');
+    const numberTwo = document.querySelector('.numberTwo');
+    if(numberOne.value.trim() === '' && numberTwo.value.trim() === '') {
+      alert('Nothing To Reset');
+      return;
+    }
+    if (confirm('Are you sure you want to reset the calculator?')) {
+      numberOne.value = '';
+      numberTwo.value = '';
+      selectedOperation = null;
+        document.querySelectorAll('.operation button').forEach(button => {
+          button.classList.remove('selected');
+        });
+        document.getElementById('result').classList.remove('error');
+        document.getElementById('result').textContent = '0';
+        document.getElementById('historyList').innerHTML = '';
+        document.getElementById('numberError').classList.remove('error');
+        document.getElementById('numberError').textContent = '';
+      }
+    }
+</script>
 <body>
 
   <div class="page">
@@ -14,21 +37,22 @@
     <div class="calculator" style="width: 400px; padding: 24px; border-radius: 16px;">
       <h1>Calculator</h1>
       <div class="input">
-        <input type="text" class="numberOne" placeholder="Number 1">
-        <input type="text" class="numberTwo" placeholder="Number 2">
+        <input type="text" class="numberOne" placeholder="Number 1"> 
+        <input type="text" class="numberTwo" placeholder="Number 2"> 
       </div>
+      <div class="errorInput"><p><span id="numberError"></span></span></p></div>
       <div class="operation">
         <button class="add">+
         </button>
         <button class="subtract">-
         </button>
-        <button class="multiply">*
+        <button class="multiply">x
         </button>
         <button class="divide">/
         </button>
       </div>
       <div class="buttonGroup" style="display: flex; justify-content: center; gap: 16px; margin-top: 16px;">
-        <button type="button" class="reset">Reset</button>
+        <button type="button" class="reset" onclick="resetCalculator()">Reset</button>
         <button type="button" class="submit">Submit</button>
       </div>
       <div class="result">
@@ -36,13 +60,13 @@
       </div>
       <div class="history">
         <h2>History</h2>
-        <ul id="historyList"></ul>
+        <ul id="historyList" style="padding: 0; margin: 0;">
+          <!-- li added in app.js -->
+        </ul>
       </div>
     </div>
   </div>
-  <script>
 
-  </script>
 
 </body>
 </html>

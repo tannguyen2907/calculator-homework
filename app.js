@@ -6,12 +6,16 @@ const resultSpan = document.getElementById('result');
 const historyList = document.getElementById('historyList');
 const resetBtn = document.querySelector('.reset');
 const buttonGroup = document.querySelector('.buttonGroup');
-const historyItem = document.createElement('li');
+const spanError = document.getElementById('numberError');
 let selectedOperation = null;
 
 operationButtons.forEach(button => {
   button.addEventListener('click', () => {
-    selectedOperation = button.className;
+    operationButtons.forEach(operationButton => {
+      operationButton.classList.remove('selected');
+    });
+    button.classList.add('selected');
+    selectedOperation = button.classList[0];
   });
 });
 
@@ -19,9 +23,6 @@ submitBtn.addEventListener('click', () => {
   calculate(selectedOperation);
 });
 
-resetBtn.addEventListener('click', () => {
-  resetCalculator();
-});
 
 buttonGroup.addEventListener('click', (event) => {
   if (event.target === buttonGroup) {
@@ -32,6 +33,10 @@ buttonGroup.addEventListener('click', (event) => {
 function calculate(operation) {
   const firstNumber = Number(numberOne.value);
   const secondNumber = Number(numberTwo.value);
+  if((numberOne.value.trim() === '' || numberTwo.value.trim() === '')) {
+    spanError.textContent = `Please enter ${numberOne.value.trim() === '' ? 'Number 1' : 'Number 2'}`;
+    return;
+  }
   let result;
 
   switch (operation) {
@@ -59,19 +64,11 @@ function calculate(operation) {
   const operationSymbols = {
     add: '+',
     subtract: '-',
-    multiply: '*',
+    multiply: 'x',
     divide: '/'
   };
 
   const historyItem = document.createElement('li');
   historyItem.textContent = `${firstNumber} ${operationSymbols[operation]} ${secondNumber} = ${result}`;
   historyList.prepend(historyItem);
-}
-
-function resetCalculator() {
-  numberOne.value = '';
-  numberTwo.value = '';
-  selectedOperation = null;
-  resultSpan.classList.remove('error');
-  resultSpan.textContent = '0';
 }
