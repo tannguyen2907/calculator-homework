@@ -94,3 +94,11 @@ ul {
   list-style-type: decimal;
   justify-content: center;
 }
+
+#historyStatus {
+  text-align: center;
+}
+
+#historyStatus.error {
+  color: #b10a0a;
+}

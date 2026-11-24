@@ -4,10 +4,59 @@ const operationButtons = document.querySelectorAll('.operation button');
 const submitBtn = document.querySelector('.submit');
 const resultSpan = document.getElementById('result');
 const historyList = document.getElementById('historyList');
-const resetBtn = document.querySelector('.reset');
 const buttonGroup = document.querySelector('.buttonGroup');
 const spanError = document.getElementById('numberError');
+const historyStatus = document.getElementById('historyStatus');
+const operationSymbols = {
+  add: '+',
+  subtract: '-',
+  multiply: 'x',
+  divide: '/'
+};
 let selectedOperation = null;
+
+function renderHistory(items) {
+  historyList.replaceChildren();
+  items.forEach(item => {
+    const historyItem = document.createElement('li');
+    historyItem.textContent = `${item.firstNumber} ${operationSymbols[item.operation]} ${item.secondNumber} = ${item.result}`;
+    historyList.append(historyItem);
+  });
+}
+
+async function loadHistory() {
+  try {
+    const response = await fetch('/api/history');
+    const items = await response.json();
+    if (!response.ok) {
+      throw new Error(items.error || 'Unable to load history.');
+    }
+    renderHistory(items);
+    historyStatus.textContent = '';
+    historyStatus.classList.remove('error');
+  } catch (error) {
+    historyStatus.textContent = `Could not load history: ${error.message}`;
+    historyStatus.classList.add('error');
+  }
+}
+
+async function saveHistoryItem(item) {
+  try {
+    const response = await fetch('/api/history', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(item)
+    });
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(result.error || 'Unable to save history.');
+    }
+    await loadHistory();
+  } catch (error) {
+    historyStatus.textContent = `Could not save history: ${error.message}`;
+    historyStatus.classList.add('error');
+  }
+}
 
 operationButtons.forEach(button => {
   button.addEventListener('click', () => {
@@ -22,7 +71,6 @@ operationButtons.forEach(button => {
 submitBtn.addEventListener('click', () => {
   calculate(selectedOperation);
 });
-
 
 buttonGroup.addEventListener('click', (event) => {
   if (event.target === buttonGroup) {
@@ -61,14 +109,10 @@ function calculate(operation) {
   resultSpan.classList.remove('error');
   resultSpan.textContent = result;
 
-  const operationSymbols = {
-    add: '+',
-    subtract: '-',
-    multiply: 'x',
-    divide: '/'
-  };
-
   const historyItem = document.createElement('li');
   historyItem.textContent = `${firstNumber} ${operationSymbols[operation]} ${secondNumber} = ${result}`;
   historyList.prepend(historyItem);
+  saveHistoryItem({ firstNumber, secondNumber, operation });
 }
+
+loadHistory();
