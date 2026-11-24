@@ -4,6 +4,8 @@ The GitHub repository is connected to the Cloudflare Pages project, which deploy
 
 ## Configure free Workers KV storage
 
+The production Pages project uses the `HISTORY_KV` binding with the `calculator-homework-history` namespace.
+
 1. In the Cloudflare Dashboard, open **Workers & Pages** > **KV** and create a namespace named `calculator-homework-history`.
 2. Open **Workers & Pages** > **calculator-homework** > **Settings** > **Bindings** > **Add** > **KV namespace**.
 3. Set the variable name to `HISTORY_KV`, select the namespace, and save.
