@@ -1,23 +1,26 @@
-# Deploy the calculator
+# Deploy the calculator on Cloudflare Pages
 
-The existing Cloudflare Pages deployment is static and cannot run the history API. The complete app is configured to run on Render with a persistent disk for `history.txt`.
+The GitHub repository is connected to the Cloudflare Pages project, which deploys the `main` branch. The history API is a Pages Function at `functions/api/history.js`. It stores the history JSON as text in a Workers KV value named `history.txt`.
 
-## Deploy on Render
+## Configure free Workers KV storage
 
-1. Push the app files and `render.yaml` to the GitHub repository's `main` branch.
-2. In the [Render Dashboard](https://dashboard.render.com), choose **New** > **Blueprint** and connect `tannguyen2907/calculator-homework`.
-3. Review the web service and persistent disk plan, then create the Blueprint. Render persistent disks require a paid web-service plan.
-4. Wait for the service to deploy and open its `onrender.com` URL.
-5. Test a calculation, reload the page, and confirm the history is still displayed.
+1. In the Cloudflare Dashboard, open **Workers & Pages** > **KV** and create a namespace named `calculator-homework-history`.
+2. Open **Workers & Pages** > **calculator-homework** > **Settings** > **Bindings** > **Add** > **KV namespace**.
+3. Set the variable name to `HISTORY_KV`, select the namespace, and save.
+4. Redeploy the Pages project so the Function can use the binding.
 
-After the Blueprint is created, pushes to `main` redeploy the Render service. Cloudflare Pages may also redeploy from `main`, but its static URL will not provide the history API.
+The Workers Free plan includes 1 GB of KV storage, 100,000 reads per day, and 1,000 writes per day. Requests over the Free plan limits fail until the daily limit resets; they do not incur overage charges on the Free plan.
+
+## Deploy changes
+
+Push changes to the repository's `main` branch. Cloudflare Pages builds the static site and deploys the Pages Function from the root `functions` directory. After deployment, open the Pages URL, submit a calculation, then reload to verify history persists.
 
 ## Local development
 
-From the project folder, run:
+Run the Node mock API from the project folder:
 
 ```powershell
 node server.js
 ```
 
-Then open <http://localhost:3000>. History is saved to the local `history.txt`; on Render, `HISTORY_FILE` points to the persistent disk instead.
+Then open <http://localhost:3000>. Locally, history is saved to `history.txt`; on Cloudflare, it is stored as the text value `history.txt` in the KV namespace.
