@@ -14,6 +14,7 @@ const operationSymbols = {
   divide: '/'
 };
 let selectedOperation = null;
+let pendingHistorySave = Promise.resolve();
 
 function renderHistory(items) {
   historyList.replaceChildren();
@@ -112,7 +113,9 @@ function calculate(operation) {
   const historyItem = document.createElement('li');
   historyItem.textContent = `${firstNumber} ${operationSymbols[operation]} ${secondNumber} = ${result}`;
   historyList.prepend(historyItem);
-  saveHistoryItem({ firstNumber, secondNumber, operation });
+  pendingHistorySave = pendingHistorySave.then(() =>
+    saveHistoryItem({ firstNumber, secondNumber, operation })
+  );
 }
 
 loadHistory();

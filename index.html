@@ -8,28 +8,46 @@
   <script src="app.js" defer></script>
 </head>
 <script>
-  function resetCalculator() {
+  async function resetCalculator() {
     const numberOne = document.querySelector('.numberOne');
     const numberTwo = document.querySelector('.numberTwo');
     const historyList = document.getElementById('historyList');
+    const historyStatus = document.getElementById('historyStatus');
     if (historyList.children.length === 0) {
       alert('Nothing To Reset');
       return;
     }
-    if (confirm('Are you sure you want to reset the calculator?')) {
+
+    if (!confirm('Are you sure you want to reset the calculator?')) {
+      return;
+    }
+
+    try {
+      await pendingHistorySave;
+      const response = await fetch('/api/history', { method: 'DELETE' });
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || 'Unable to clear history.');
+      }
+
       numberOne.value = '';
       numberTwo.value = '';
       selectedOperation = null;
-        document.querySelectorAll('.operation button').forEach(button => {
-          button.classList.remove('selected');
-        });
-        document.getElementById('result').classList.remove('error');
-        document.getElementById('result').textContent = '0';
-        document.getElementById('historyList').innerHTML = '';
-        document.getElementById('numberError').classList.remove('error');
-        document.getElementById('numberError').textContent = '';
-      }
+      document.querySelectorAll('.operation button').forEach(button => {
+        button.classList.remove('selected');
+      });
+      document.getElementById('result').classList.remove('error');
+      document.getElementById('result').textContent = '0';
+      historyList.replaceChildren();
+      document.getElementById('numberError').classList.remove('error');
+      document.getElementById('numberError').textContent = '';
+      historyStatus.textContent = '';
+      historyStatus.classList.remove('error');
+    } catch (error) {
+      historyStatus.textContent = `Could not clear history: ${error.message}`;
+      historyStatus.classList.add('error');
     }
+  }
 </script>
 <body>
 

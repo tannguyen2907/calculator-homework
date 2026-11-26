@@ -47,6 +47,11 @@ export async function onRequest({ request, env }) {
       return jsonResponse(await readHistory(env.HISTORY_KV));
     }
 
+    if (request.method === 'DELETE') {
+      await env.HISTORY_KV.delete(historyObjectKey);
+      return jsonResponse({ cleared: true });
+    }
+
     if (request.method === 'POST') {
       let body;
       try {

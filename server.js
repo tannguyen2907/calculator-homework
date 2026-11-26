@@ -136,7 +136,16 @@ async function handleApi(request, response, pathname) {
     return;
   }
 
-  response.setHeader('Allow', 'GET, POST');
+  if (request.method === 'DELETE') {
+    await updateHistory(() => ({
+      history: [],
+      result: { cleared: true }
+    }));
+    sendJson(response, 200, { cleared: true });
+    return;
+  }
+
+  response.setHeader('Allow', 'GET, POST, DELETE');
   sendJson(response, 405, { error: 'Method not allowed.' });
 }
 
