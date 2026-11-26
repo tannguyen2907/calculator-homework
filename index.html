@@ -11,7 +11,8 @@
   function resetCalculator() {
     const numberOne = document.querySelector('.numberOne');
     const numberTwo = document.querySelector('.numberTwo');
-    if(numberOne.value.trim() === '' && numberTwo.value.trim() === '') {
+    const historyList = document.getElementById('historyList');
+    if (historyList.children.length === 0) {
       alert('Nothing To Reset');
       return;
     }
